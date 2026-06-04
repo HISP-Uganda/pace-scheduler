@@ -33,4 +33,4 @@ jobs:
           git rebase --onto temp-root 30baf2a main
           
           echo "=== HISTORY REWRITTEN SUCCESSFULLY, FORCE PUSHING ==="
-          git push origin main --force
+          git push origin master --force
