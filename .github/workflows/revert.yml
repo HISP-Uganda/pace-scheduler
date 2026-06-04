@@ -1,0 +1,36 @@
+name: Purge Root Commit Files
+on: workflow_dispatch
+
+jobs:
+  purge-root:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Wipe Initial Commit Data
+        run: |
+          git config --global user.name "Security Bot"
+          git config --global user.email "bot@github.com"
+          
+          git checkout main
+          
+          echo "=== REWRITING ROOT HISTORY ==="
+          # 1. Create a completely empty orphan branch (this will act as our new blank slate root)
+          git checkout --orphan temp-root
+          git rm -rf .
+          
+          # 2. Commit a completely empty blank readme or tracking file to form a clean first commit
+          echo "# Repository Initialized Safely" > README.md
+          git add README.md
+          git commit -m "chore: safe initial commit"
+          
+          # 3. Rebase your actual work from the main branch on top of this brand new clean root
+          # This completely drops the old 30baf2a commit data out of existence
+          git rebase --onto temp-root 30baf2a main
+          
+          echo "=== HISTORY REWRITTEN SUCCESSFULLY, FORCE PUSHING ==="
+          git push origin main --force
