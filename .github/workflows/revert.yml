@@ -16,7 +16,7 @@ jobs:
           git config --global user.name "Security Bot"
           git config --global user.email "bot@github.com"
           
-          git checkout main
+          git checkout master
           
           echo "=== REWRITING ROOT HISTORY ==="
           # 1. Create a completely empty orphan branch (this will act as our new blank slate root)
@@ -28,9 +28,9 @@ jobs:
           git add README.md
           git commit -m "chore: safe initial commit"
           
-          # 3. Rebase your actual work from the main branch on top of this brand new clean root
+          # 3. Rebase your actual work from the master branch on top of this brand new clean root
           # This completely drops the old 30baf2a commit data out of existence
-          git rebase --onto temp-root 30baf2a main
+          git rebase --onto temp-root 30baf2a master
           
           echo "=== HISTORY REWRITTEN SUCCESSFULLY, FORCE PUSHING ==="
           git push origin master --force
